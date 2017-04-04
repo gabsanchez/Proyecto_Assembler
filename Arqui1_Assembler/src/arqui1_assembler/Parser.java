@@ -87,5 +87,178 @@ public final class Parser {
         
     }
     
-   
+    public byte[] comp(String Instruccion)
+    {
+        byte[] Salida = new byte[10];
+        Salida[0] = 1;
+        Salida[1] = 1;
+        Salida[2] = 1;
+        switch (Instruccion) {
+            case "0":
+                Salida[3] = 0;
+                Salida[4] = 1;
+                Salida[5] = 0;
+                Salida[6] = 1;
+                Salida[7] = 0;
+                Salida[8] = 1;
+                Salida[9] = 0;
+                break;
+            case "1":
+                Salida[3] = 0;
+                Salida[4] = 1;
+                Salida[5] = 1;
+                Salida[6] = 1;
+                Salida[7] = 1;
+                Salida[8] = 1;
+                Salida[9] = 1;
+                break;
+            case "-1":
+                Salida[3] = 0;
+                Salida[4] = 1;
+                Salida[5] = 1;
+                Salida[6] = 1;
+                Salida[7] = 0;
+                Salida[8] = 1;
+                Salida[9] = 0;
+                break;
+            case "D":
+                Salida[3] = 0;
+                Salida[4] = 0;
+                Salida[5] = 0;
+                Salida[6] = 1;
+                Salida[7] = 1;
+                Salida[8] = 0;
+                Salida[9] = 0;
+                break;
+            case "A":
+                Salida[3] = 0;
+                Salida[4] = 1;
+                Salida[5] = 1;
+                Salida[6] = 0;
+                Salida[7] = 0;
+                Salida[8] = 0;
+                Salida[9] = 0;
+                break;
+            case "!D":
+                Salida[3] = 0;
+                Salida[4] = 0;
+                Salida[5] = 0;
+                Salida[6] = 1;
+                Salida[7] = 1;
+                Salida[8] = 0;
+                Salida[9] = 1;
+                break;
+            case "!A":
+                Salida[3] = 0;
+                Salida[4] = 1;
+                Salida[5] = 1;
+                Salida[6] = 0;
+                Salida[7] = 0;
+                Salida[8] = 0;
+                Salida[9] = 1;
+                break;
+            case "-D":
+                Salida[3] = 0;
+                Salida[4] = 0;
+                Salida[5] = 0;
+                Salida[6] = 1;
+                Salida[7] = 1;
+                Salida[8] = 1;
+                Salida[9] = 1;
+                break;
+            case "-A":
+                Salida[3] = 0;
+                Salida[4] = 1;
+                Salida[5] = 1;
+                Salida[6] = 0;
+                Salida[7] = 0;
+                Salida[8] = 1;
+                Salida[9] = 1;
+                break;
+            case "D+1":
+                Salida[3] = 0;
+                Salida[4] = 0;
+                Salida[5] = 1;
+                Salida[6] = 1;
+                Salida[7] = 1;
+                Salida[8] = 1;
+                Salida[9] = 1;
+                break;
+            case "A+1":
+                Salida[3] = 0;
+                Salida[4] = 1;
+                Salida[5] = 1;
+                Salida[6] = 0;
+                Salida[7] = 1;
+                Salida[8] = 1;
+                Salida[9] = 1;
+                break;
+            case "D-1":
+                Salida[3] = 0;
+                Salida[4] = 0;
+                Salida[5] = 0;
+                Salida[6] = 1;
+                Salida[7] = 1;
+                Salida[8] = 1;
+                Salida[9] = 0;
+                break; 
+            case "A-1":
+                Salida[3] = 0;
+                Salida[4] = 1;
+                Salida[5] = 1;
+                Salida[6] = 0;
+                Salida[7] = 0;
+                Salida[8] = 1;
+                Salida[9] = 0;
+                break;
+            case "D+A":
+                Salida[3] = 0;
+                Salida[4] = 0;
+                Salida[5] = 0;
+                Salida[6] = 0;
+                Salida[7] = 0;
+                Salida[8] = 1;
+                Salida[9] = 0;
+                break;
+            case "D-A":
+                Salida[3] = 0;
+                Salida[4] = 0;
+                Salida[5] = 1;
+                Salida[6] = 0;
+                Salida[7] = 0;
+                Salida[8] = 1;
+                Salida[9] = 1;
+                break;
+            case "A-D":
+                Salida[3] = 0;
+                Salida[4] = 0;
+                Salida[5] = 0;
+                Salida[6] = 0;
+                Salida[7] = 1;
+                Salida[8] = 1;
+                Salida[9] = 1;
+                break;
+            case "D&A":
+                Salida[3] = 0;
+                Salida[4] = 0;
+                Salida[5] = 0;
+                Salida[6] = 0;
+                Salida[7] = 0;
+                Salida[8] = 0;
+                Salida[9] = 0;
+                break;
+            case "D|A":
+                Salida[3] = 0;
+                Salida[4] = 0;
+                Salida[5] = 1;
+                Salida[6] = 0;
+                Salida[7] = 1;
+                Salida[8] = 0;
+                Salida[9] = 1;
+                break;
+            default:
+                break;
+        }
+        return Salida;
+    }
 }
