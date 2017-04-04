@@ -11,6 +11,7 @@ import java.io.IOException;
 import static java.nio.file.Files.list;
 import static java.rmi.Naming.list;
 import java.util.ArrayList;
+import java.util.BitSet;
 import static java.util.Collections.list;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -86,6 +87,73 @@ public final class Parser {
         }
         
     }
-    
-   
+    private BitSet Dest(String instruccion)
+    {
+        BitSet salida = new BitSet(3);//d1, d2, d3 --los indices son 0, 1 y 2
+        switch(instruccion)
+        {
+            case "M":
+                salida.set(2);
+                break;
+            case "D":
+                salida.set(1);
+                break;
+            case "MD":
+                salida.set(1);
+                salida.set(2);
+                break;
+            case "A":
+                salida.set(0);
+                break;
+            case "AM":
+                salida.set(0);
+                salida.set(2);
+            case "AD":
+                salida.set(0);
+                salida.set(1);
+            case "AMD":
+                salida.set(0);
+                salida.set(1);
+                salida.set(2);
+            default:
+                break;
+        }
+        return salida;
+    }
+    private BitSet Salto(String instruccion)
+    {
+        BitSet j = new BitSet(3);
+        switch(instruccion)
+        {
+            case "JGT":
+                j.set(2);
+                break;
+            case "JEQ":
+                j.set(1);
+                break;
+            case "JGE":
+                j.set(1);
+                j.set(2);
+                break;
+            case "JLT":
+                j.set(0);
+                break;
+            case "JNE":
+                j.set(0);
+                j.set(2);
+                break;
+            case "JLE":
+                j.set(0);
+                j.set(1);
+                break;
+            case "JMP":
+                j.set(0);
+                j.set(1);
+                j.set(2);
+                break;
+            default:
+                break;
+        }
+        return j;
+    }
 }
