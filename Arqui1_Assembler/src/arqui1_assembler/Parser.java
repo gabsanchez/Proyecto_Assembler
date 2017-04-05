@@ -195,7 +195,7 @@ public final class Parser {
             for (int i = 0; i < 10; i++) {
                 Aux= Aux + comp(DCJ[1])[i];
             }
-            Salida = Aux+Dest(DCJ[0])+"000";
+            Salida = Aux + Dest(DCJ[0]) + "000";
         }
         else if (Instruccion.contains(";")) {
             DCJ = Instruccion.split(";");
@@ -203,7 +203,7 @@ public final class Parser {
             for (int i = 0; i < 10; i++) {
                 Aux= Aux + comp(DCJ[0])[i];
             }
-            Salida = Aux +"000"+Salto(DCJ[1]);
+            Salida = Aux +"000" + Salto(DCJ[1]);
         }
         return Salida;
     }
@@ -471,71 +471,66 @@ public final class Parser {
         return Salida;
     }
         
-    private BitSet Dest(String instruccion)
+    private String Dest(String instruccion)
     {
-        BitSet salida = new BitSet(3);//d1, d2, d3 --los indices son 0, 1 y 2
+        String salida;
         switch(instruccion)
         {
             case "M":
-                salida.set(2);
+                salida = "001";
                 break;
             case "D":
-                salida.set(1);
+                salida = "010";
                 break;
             case "MD":
-                salida.set(1);
-                salida.set(2);
+                salida = "011";
                 break;
             case "A":
-                salida.set(0);
+                salida = "100";
                 break;
             case "AM":
-                salida.set(0);
-                salida.set(2);
+                salida = "101";
+                break;
             case "AD":
-                salida.set(0);
-                salida.set(1);
+                salida = "110";
+                break;
             case "AMD":
-                salida.set(0);
-                salida.set(1);
-                salida.set(2);
+                salida = "111";
+                break;
             default:
+                salida = "000";
                 break;
         }
         return salida;
     }
-    private BitSet Salto(String instruccion)
+    private String Salto(String instruccion)
     {
-        BitSet j = new BitSet(3);
+        String j;
         switch(instruccion)
         {
             case "JGT":
-                j.set(2);
+                j = "001";
                 break;
             case "JEQ":
-                j.set(1);
+                j = "010";
                 break;
             case "JGE":
-                j.set(1);
-                j.set(2);
+                j = "011";
                 break;
             case "JLT":
-                j.set(0);
+                j = "100";
                 break;
             case "JNE":
-                j.set(0);
-                j.set(2);
+                j = "101";
                 break;
             case "JLE":
-                j.set(0);
-                j.set(1);
+                j = "110";
                 break;
             case "JMP":
-                j.set(0);
-                j.set(1);
-                j.set(2);
+                j = "111";
                 break;
             default:
+                j = "000";
                 break;
         }
 
