@@ -113,6 +113,9 @@ public final class Parser {
     
     private byte[] comp(String Instruccion)
     {
+        Instruccion = Instruccion.trim();
+        Instruccion = Instruccion.replace(" ", "");
+        Instruccion = Instruccion.replace("\t", "");
         byte[] Salida = new byte[10];
         Salida[0] = 1;
         Salida[1] = 1;
