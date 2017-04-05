@@ -6,6 +6,7 @@
 package arqui1_assembler;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  *
@@ -16,7 +17,7 @@ public class Arqui1_Assembler {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws FileNotFoundException, IOException {
         UI frame = new UI();
         frame.setVisible(true);
     }
