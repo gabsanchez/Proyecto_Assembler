@@ -63,6 +63,12 @@ public final class Parser {
         labels_ROM.add("R13|13");
         labels_ROM.add("R14|14");
         labels_ROM.add("R15|15");
+        labels_ROM.add("SP|0");
+        labels_ROM.add("LCL|1");
+        labels_ROM.add("ARG|2");
+        labels_ROM.add("THIS|3");
+        labels_ROM.add("THAT|4");
+        
         
         //Carga del archivo en una lista
         try (Scanner s = new Scanner(new File(path))) {
