@@ -94,7 +94,9 @@ public final class Parser {
     
     private String InstruccionC(String Instruccion)
     {
-        Instruccion = Instruccion.split("/")[0];
+        if (Instruccion.contains("/")) {
+            Instruccion = Instruccion.split("/")[0];
+        }      
         String Salida = "";
         String[] DCJ= new String[2];
         if (Instruccion.contains("=")) {
