@@ -6,6 +6,7 @@
 package arqui1_assembler;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -19,7 +20,7 @@ public final class UI extends javax.swing.JFrame {
     /**
      * Creates new form UI
      */
-    public UI() throws FileNotFoundException {
+    public UI() throws FileNotFoundException, IOException {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -47,6 +48,11 @@ public final class UI extends javax.swing.JFrame {
 
         jButton2.setText("Save");
         jButton2.setToolTipText("");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -88,12 +94,17 @@ public final class UI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    String nombreArchivo;
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
 
-    public void upload() throws FileNotFoundException{
+    public void upload() throws FileNotFoundException, IOException{
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.showOpenDialog(this);
-        
-        Parser fparser = new Parser(fileChooser.getSelectedFile().getPath());
+        String ruta = fileChooser.getSelectedFile().getPath();
+        Parser fparser = new Parser(ruta);
     }
     /**
      * @param args the command line arguments
@@ -128,6 +139,8 @@ public final class UI extends javax.swing.JFrame {
                 try {
                     new UI().setVisible(true);
                 } catch (FileNotFoundException ex) {
+                    Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
                     Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

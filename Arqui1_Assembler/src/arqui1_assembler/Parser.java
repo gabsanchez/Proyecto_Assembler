@@ -7,6 +7,8 @@ package arqui1_assembler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 //import java.io.IOException;
 //import static java.nio.file.Files.list;
 //import static java.rmi.Naming.list;
@@ -27,19 +29,20 @@ import java.util.Scanner;
 public final class Parser {
     
     String path = "";
-     Parser(String _path) throws FileNotFoundException{
+     Parser(String _path) throws FileNotFoundException, IOException{
          path= _path;
          asm_conv(path);
-         
+         String rutaout = path.substring(0, path.length() - 3) + "hack";
+         Escribir(rutaout);
      }
      
     ArrayList<String> labels = new ArrayList<>();
     ArrayList<String> labels_ROM = new ArrayList<>();
     ArrayList<String> vars = new ArrayList<>();
+    ArrayList<String> bin_list = new ArrayList<>();
     public void asm_conv(String path) throws FileNotFoundException{
         ArrayList<String> list = new ArrayList<>();
         ArrayList<String> lines = new ArrayList<>();
-        ArrayList<String> bin_list = new ArrayList<>();
         
 
         labels_ROM.add("SCREEN|16384");
@@ -535,5 +538,14 @@ public final class Parser {
         }
 
         return j;
+    }
+    public void Escribir(String nombreCompleto) throws IOException
+    {
+        FileWriter fw = new FileWriter(nombreCompleto);
+        for(String b : bin_list)
+        {
+            fw.write(b + "\n");
+        }
+        fw.close();
     }
 }
