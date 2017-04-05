@@ -7,17 +7,18 @@ package arqui1_assembler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import static java.nio.file.Files.list;
-import static java.rmi.Naming.list;
+//import java.io.IOException;
+//import static java.nio.file.Files.list;
+//import static java.rmi.Naming.list;
 import java.util.ArrayList;
 import java.util.BitSet;
-import static java.util.Collections.list;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFileChooser;
-import javax.swing.table.DefaultTableModel;
+//import static java.util.Collections.list;
+//import java.util.Scanner;
+//import java.util.logging.Level;
+//import java.util.logging.Logger;
+//import javax.swing.JFileChooser;
+//import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -39,6 +40,10 @@ public final class Parser {
         try (Scanner s = new Scanner(new File(path))) {
             
             while (s.hasNextLine()){
+                String aux = s.nextLine();
+                aux = aux.trim();
+                aux = aux.replace(" ","");
+                aux = aux.replace("\t","");
                 list.add(s.nextLine());
             }
         }
@@ -61,7 +66,6 @@ public final class Parser {
             
         }
         */
-       
         //Proceso cada linea 
         for (String item : list) {
             if (!item.equals("")) {
