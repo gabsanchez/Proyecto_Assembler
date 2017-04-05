@@ -30,11 +30,20 @@ public final class Parser {
      Parser(String _path) throws FileNotFoundException{
          path= _path;
          asm_conv(path);
+         
      }
+     
+    ArrayList<String> labels = new ArrayList<>();
+    ArrayList<String> labels_ROM = new ArrayList<>();
+    ArrayList<String> vars = new ArrayList<>();
     public void asm_conv(String path) throws FileNotFoundException{
         ArrayList<String> list = new ArrayList<>();
-        ArrayList<Integer> index = new ArrayList<>();
+        ArrayList<String> lines = new ArrayList<>();
         ArrayList<String> bin_list = new ArrayList<>();
+        
+
+        labels_ROM.add("SCREEN|16384");
+        labels_ROM.add("KBD|24576");
         
         //Carga del archivo en una lista
         try (Scanner s = new Scanner(new File(path))) {
@@ -44,54 +53,135 @@ public final class Parser {
                 aux = aux.trim();
                 aux = aux.replace(" ","");
                 aux = aux.replace("\t","");
-                list.add(s.nextLine());
+                
+                if (!aux.isEmpty()) {
+                    list.add(aux);
+                }
+                
             }
         }
      
-        /*
-        for (int i = 0; i < list.size(); i++) {
-            list.set(i,list.get(i).trim());
-            
-            if (!list.get(i).equals("")) {
-               String m = list.get(i).substring(0,1);
-            
-            if (m.equals("/")){
-                index.add(i);
-                } 
-            }
-            else{
-                index.add(i);
-            }
-            
-            
-        }
-        */
-        //Proceso cada linea 
+        
+        //Proceso de eliminacion de lineas que no son instrucciones
         for (String item : list) {
-            if (!item.equals("")) {
-                for (int i = 0; i < item.length(); i++) {
-                    String m = item.substring(i,1);
+            
+            if(!item.startsWith("/")) {
+                lines.add(item);
+            }    
+        }
+        
+        int x = 0;
+        //Proceso de agregar ETIQUETAS
+        for (String item : lines) {
+           
+            if(item.startsWith("(")){
+                String n = item.substring(1,item.indexOf(")"));
+                labels.add(n + "|" + (x - labels.size()));
+            }
+            x++;
+        }
+        
+        //Proceso cada linea 
+        for (String item : lines) {
+            if ((!item.equals("")) &&(!item.startsWith("("))) {
+                
+                    
 
                     //Instruccion tipo -A 
-                    if (m.equals("@")) { 
-                        m= item.substring(1);
-                        bin_list.add("0" + String.format("%15s",Integer.toBinaryString(Integer.parseInt(m))).replace(' ', '0'));
-                        break;
+                    if (item.startsWith("@")) { 
+                        String[] n = item.split("/");
+                        String m = n[0].replace("@", "");
+                        
+                        //@Numero
+                        if (isNumeric(m)) {
+                            bin_list.add("0" + String.format("%15s",Integer.toBinaryString(Integer.parseInt(m))).replace(' ', '0'));
+                        }
+                        //@String
+                        else{
+                            
+                            //Verifico que venga una ETIQUETA
+                            if (m.equals(m.toUpperCase())) {
+                                String nemo = finding_Nemo(m);
+                                
+                                if (!nemo.equals("")) {
+                                    bin_list.add("0" + String.format("%15s",Integer.toBinaryString(Integer.parseInt(nemo))).replace(' ', '0'));    
+                                }
+                                //No encontro ninguna etiqueta con ese nombre
+                                else{
+                                    
+                                }
+                                
+                            }
+                            //Es una variable
+                            else{
+                                String dory = finding_Dory(m);
+                                
+                                //Si la variable existe.
+                                if (!dory.equals("")) {
+                                   bin_list.add("0" + String.format("%15s",Integer.toBinaryString(Integer.parseInt(dory))).replace(' ', '0')); 
+                                }
+                                //Si la variable no existe la agrego a la lista.
+                                else{
+                                    vars.add(m);
+                                    dory = finding_Dory(m);
+                                    bin_list.add("0" + String.format("%15s",Integer.toBinaryString(Integer.parseInt(dory))).replace(' ', '0'));
+                                }
+                            }
+                        }
+                        
+                        
+                        
                     }
-                    //Encuentra espacios en blanco
-                    else if (m.equals(" ")){
+                    else{
+                        bin_list.add(InstruccionC(item));
+                    }
+                   
+                   
 
-                    }
-                    else if (m.equals("/")){
-                        break;
-                    }
-
-                }
+                
             }
         }
         
     }
     
+    public String finding_Nemo(String label){
+ 
+        for (int i = 0; i < labels.size(); i++) {
+            String m = labels.get(i).substring(0,labels.get(i).indexOf("|"));
+            String n = labels.get(i).substring(labels.get(i).indexOf("|") + 1,labels.get(i).length());
+            if (label.equals(m)) {                
+                return n;
+            }
+        }
+        
+        for (int i = 0; i < labels_ROM.size(); i++) {
+            String x = labels_ROM.get(i).substring(0,labels_ROM.get(i).indexOf("|"));
+            String y = labels_ROM.get(i).substring(labels_ROM.get(i).indexOf("|") + 1,labels_ROM.get(i).length());
+            if (label.equals(x)) {
+                return y;
+            }
+        }
+        return "";
+        
+    }
+    
+    public String finding_Dory(String var){
+ 
+        for (int i = 0; i < vars.size(); i++) {
+            
+            if (var.equals(vars.get(i))) {                
+                return (i + 16) + "";
+            }
+        }
+        
+        
+        return "";
+        
+    }
+    
+    public boolean isNumeric(String s) {  
+    return s.matches("[-+]?\\d*\\.?\\d+");  
+}  
     private String InstruccionC(String Instruccion)
     {
         if (Instruccion.contains("/")) {
