@@ -44,9 +44,25 @@ public final class Parser {
         ArrayList<String> list = new ArrayList<>();
         ArrayList<String> lines = new ArrayList<>();
         
-
+        //Se carga las etiquetas de ROM
         labels_ROM.add("SCREEN|16384");
         labels_ROM.add("KBD|24576");
+        labels_ROM.add("R0|0");
+        labels_ROM.add("R1|1");
+        labels_ROM.add("R2|2");
+        labels_ROM.add("R3|3");
+        labels_ROM.add("R4|4");
+        labels_ROM.add("R5|5");
+        labels_ROM.add("R6|6");
+        labels_ROM.add("R7|7");
+        labels_ROM.add("R8|8");
+        labels_ROM.add("R9|9");
+        labels_ROM.add("R10|10");
+        labels_ROM.add("R11|11");
+        labels_ROM.add("R12|12");
+        labels_ROM.add("R13|13");
+        labels_ROM.add("R14|14");
+        labels_ROM.add("R15|15");
         
         //Carga del archivo en una lista
         try (Scanner s = new Scanner(new File(path))) {
@@ -88,8 +104,6 @@ public final class Parser {
         for (String item : lines) {
             if ((!item.equals("")) &&(!item.startsWith("("))) {
                 
-                    
-
                     //Instruccion tipo -A 
                     if (item.startsWith("@")) { 
                         String[] n = item.split("/");
@@ -185,6 +199,7 @@ public final class Parser {
     public boolean isNumeric(String s) {  
     return s.matches("[-+]?\\d*\\.?\\d+");  
 }  
+    
     private String InstruccionC(String Instruccion)
     {
         if (Instruccion.contains("/")) {
