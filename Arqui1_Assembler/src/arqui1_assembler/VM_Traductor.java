@@ -17,7 +17,7 @@ import java.util.Scanner;
  */
 public class VM_Traductor {
     
-    public List<String> IstruccionesASM = new ArrayList();
+    public List<String> InstruccionesASM = new ArrayList();
         
     public void vm_conv(String path) throws FileNotFoundException{
     
@@ -106,7 +106,7 @@ public class VM_Traductor {
         Comandos = Comandos.substring(Comandos.indexOf(" "), Comandos.length()).trim();
         Contenido[3] = Comandos;
         if ( Contenido[1].equals("constant")) {
-            IstruccionesASM.add("@"+Contenido[1]);
+            InstruccionesASM.add("@"+Contenido[1]);
         }
     }
 
