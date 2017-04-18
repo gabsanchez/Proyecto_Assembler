@@ -111,7 +111,7 @@ public class VM_Traductor {
     }
 
 
-public void aritmetic(String word){
+public void arithmetic(String word){
     
     word = word.trim();
     
