@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import static java.sql.DriverManager.println;
 //import java.io.IOException;
 //import static java.nio.file.Files.list;
 //import static java.rmi.Naming.list;
@@ -63,6 +64,20 @@ public final class Parser {
         labels_ROM.add("R13|13");
         labels_ROM.add("R14|14");
         labels_ROM.add("R15|15");
+        labels_ROM.add("Temp0|5");
+        labels_ROM.add("Temp1|6");
+        labels_ROM.add("Temp2|7");
+        labels_ROM.add("Temp3|8");
+        labels_ROM.add("Temp4|9");
+        labels_ROM.add("Temp5|10");
+        labels_ROM.add("Temp6|11");
+        labels_ROM.add("Temp7|12");
+        labels_ROM.add("SP|0");
+        labels_ROM.add("LCL|1");
+        labels_ROM.add("ARG|2");
+        labels_ROM.add("THIS|3");
+        labels_ROM.add("THAT|4");
+        
         
         //Carga del archivo en una lista
         try (Scanner s = new Scanner(new File(path))) {
@@ -125,7 +140,7 @@ public final class Parser {
                                 }
                                 //No encontro ninguna etiqueta con ese nombre
                                 else{
-                                    
+                                    System.out.println(m);
                                 }
                                 
                             }
