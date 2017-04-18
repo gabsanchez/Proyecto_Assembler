@@ -104,9 +104,9 @@ public class VM_Traductor {
         Comandos = Instruccion.substring(Instruccion.indexOf(" "), Instruccion.length()).trim();
         Contenido[1] = Comandos.substring(0, Comandos.indexOf(" "));
         Comandos = Comandos.substring(Comandos.indexOf(" "), Comandos.length()).trim();
-        Contenido[3] = Comandos;
+        Contenido[2] = Comandos;
         if ( Contenido[1].equals("constant")) {
-            IstruccionesASM.add("@"+Contenido[1]);
+            IstruccionesASM.add("@"+Contenido[2]);
         }
     }
 
