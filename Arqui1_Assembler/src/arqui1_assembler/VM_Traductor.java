@@ -88,14 +88,19 @@ public class VM_Traductor {
                     arithmetic(item);
                     break;        
                 case "label": 
+                    Label(item);
                     break;
                 case "goto": 
+                    Goto(item);
                     break;
                 case "if-goto": 
+                    If(item);
                     break;
                 case "call": 
+                    Call(item);
                     break;        
                 case "function": 
+                    Function(item);
                     break;
                 case "return": 
                     break;
@@ -190,118 +195,223 @@ public class VM_Traductor {
         }
     }
 
-int eqs = 1;
-public void arithmetic(String word){
-    
-    word = word.trim();
-    
-    if ((word.equals("add"))||(word.equals("sub"))||(word.equals("and"))||(word.equals("or"))) {
-       
-        if (word.equals("add")) {
-            word = "D=D+M";
-            
+    int eqs = 1;
+    public void arithmetic(String word){
+
+        word = word.trim();
+
+        if ((word.equals("add"))||(word.equals("sub"))||(word.equals("and"))||(word.equals("or"))) {
+
+            if (word.equals("add")) {
+                word = "D=D+M";
+
+            }
+            else if (word.equals("sub")){
+                word = "D=M-D";
+            }
+            else if (word.equals("and")){
+                word = "D=D&M";
+            }
+            else if (word.equals("or")){
+                word = "D=D|M";
+            }
+
+            InstruccionesASM.add("@SP");
+            InstruccionesASM.add("M=M-1");
+            InstruccionesASM.add("A=M");
+            InstruccionesASM.add("D=M");
+            InstruccionesASM.add("A=A-1");
+            InstruccionesASM.add(word);
+            InstruccionesASM.add("M=D");
+            InstruccionesASM.add("D=A+1");
+            InstruccionesASM.add("@SP");
+            InstruccionesASM.add("M=D");
+
         }
-        else if (word.equals("sub")){
-            word = "D=M-D";
+        else if ((word.equals("neg"))||(word.equals("not"))){
+
+            if (word.equals("neg")) {
+                word = "M=-M";
+
+            }
+            else if (word.equals("not")){
+                word = "M=!M";
+            }
+            InstruccionesASM.add("@SP");
+            InstruccionesASM.add("M=M-1");
+            InstruccionesASM.add("A=M"); 
+            InstruccionesASM.add(word);
+            InstruccionesASM.add("D=A+1");
+            InstruccionesASM.add("@SP");
+            InstruccionesASM.add("M=D");
         }
-        else if (word.equals("and")){
-            word = "D=D&M";
+        else if ((word.equals("eq"))||(word.equals("lt"))||(word.equals("gt"))){
+
+            if (word.equals("eq")) {
+                word = "D=D+M";
+
+            }
+            else if (word.equals("lt")){
+                word = "D=M-D";
+            }
+            else if (word.equals("gt")){
+                word = "D=D&M";
+            }
+            InstruccionesASM.add("@SP");
+            InstruccionesASM.add("M=M-1");
+            InstruccionesASM.add("A=M");
+            InstruccionesASM.add("D=M");
+            InstruccionesASM.add("A=A-1");
+            InstruccionesASM.add("D=M-D");
+            InstruccionesASM.add("@COMP" + eqs);
+            InstruccionesASM.add(word);
+            InstruccionesASM.add("@0");
+            InstruccionesASM.add("D=-A");
+            InstruccionesASM.add("@SP");
+            InstruccionesASM.add("A=M");
+            InstruccionesASM.add("M=D");
+            InstruccionesASM.add("@SP");
+            InstruccionesASM.add("M=M+1");
+            InstruccionesASM.add("@FCOMP" + eqs);
+            InstruccionesASM.add("0;JMP");
+            InstruccionesASM.add("COMP" + eqs);
+            InstruccionesASM.add("@1");
+            InstruccionesASM.add("D=A");
+            InstruccionesASM.add("@SP");
+            InstruccionesASM.add("A=M");
+            InstruccionesASM.add("M=D");
+            InstruccionesASM.add("@SP");
+            InstruccionesASM.add("M=M+1");
+            InstruccionesASM.add("FCOMP" + eqs);
+
+            eqs++;
         }
-        else if (word.equals("or")){
-            word = "D=D|M";
-        }
-        
-        InstruccionesASM.add("@SP");
-        InstruccionesASM.add("M=M-1");
-        InstruccionesASM.add("A=M");
-        InstruccionesASM.add("D=M");
-        InstruccionesASM.add("A=A-1");
-        InstruccionesASM.add(word);
-        InstruccionesASM.add("M=D");
-        InstruccionesASM.add("D=A+1");
-        InstruccionesASM.add("@SP");
-        InstruccionesASM.add("M=D");
-        
+
+
+
+    } 
+
+    public void Label(String Instruccion){
+        String[] Contenido = new String[2];
+        Contenido[0] = Instruccion.substring(0, Instruccion.indexOf(" "));
+        Contenido[1] = Instruccion.substring(Instruccion.indexOf(" "), Instruccion.length()).trim();
+        InstruccionesASM.add("("+Contenido[1].toUpperCase()+")");
     }
-    else if ((word.equals("neg"))||(word.equals("not"))){
-        
-        if (word.equals("neg")) {
-            word = "M=-M";
-            
-        }
-        else if (word.equals("not")){
-            word = "M=!M";
-        }
-        InstruccionesASM.add("@SP");
-        InstruccionesASM.add("M=M-1");
-        InstruccionesASM.add("A=M"); 
-        InstruccionesASM.add(word);
-        InstruccionesASM.add("D=A+1");
-        InstruccionesASM.add("@SP");
-        InstruccionesASM.add("M=D");
-    }
-    else if ((word.equals("eq"))||(word.equals("lt"))||(word.equals("gt"))){
-        
-        if (word.equals("eq")) {
-            word = "D=D+M";
-            
-        }
-        else if (word.equals("lt")){
-            word = "D=M-D";
-        }
-        else if (word.equals("gt")){
-            word = "D=D&M";
-        }
-        InstruccionesASM.add("@SP");
-        InstruccionesASM.add("M=M-1");
-        InstruccionesASM.add("A=M");
-        InstruccionesASM.add("D=M");
-        InstruccionesASM.add("A=A-1");
-        InstruccionesASM.add("D=M-D");
-        InstruccionesASM.add("@COMP" + eqs);
-        InstruccionesASM.add(word);
-        InstruccionesASM.add("@0");
-        InstruccionesASM.add("D=-A");
-        InstruccionesASM.add("@SP");
-        InstruccionesASM.add("A=M");
-        InstruccionesASM.add("M=D");
-        InstruccionesASM.add("@SP");
-        InstruccionesASM.add("M=M+1");
-        InstruccionesASM.add("@FCOMP" + eqs);
+
+    public void Goto(String Instruccion)
+    {
+        String[] Contenido = new String[2];
+        Contenido[0] = Instruccion.substring(0, Instruccion.indexOf(" "));
+        Contenido[1] = Instruccion.substring(Instruccion.indexOf(" "), Instruccion.length()).trim();
+        InstruccionesASM.add("@"+Contenido[1].toUpperCase());
         InstruccionesASM.add("0;JMP");
-        InstruccionesASM.add("COMP" + eqs);
-        InstruccionesASM.add("@1");
+
+    }
+    
+    public void If(String Instruccion)
+    { 
+        String[] Contenido = new String[2];
+        Contenido[0] = Instruccion.substring(0, Instruccion.indexOf(" "));
+        Contenido[1] = Instruccion.substring(Instruccion.indexOf(" "), Instruccion.length()).trim();
+        InstruccionesASM.add("@SP");
+        InstruccionesASM.add("A=M");
+        InstruccionesASM.add("D=M");
+        InstruccionesASM.add("@SP");
+        InstruccionesASM.add("M=M-1");
+        InstruccionesASM.add("0;JMP");
+        InstruccionesASM.add("@"+Contenido[1].toUpperCase());
+        InstruccionesASM.add("D;JMP");   
+    }
+
+    public void Call(String Instruccion)
+    { 
+        String[] Contenido = new String[3];
+        String Comandos="";
+        Contenido[0] = Instruccion.substring(0, Instruccion.indexOf(" "));
+        Comandos = Instruccion.substring(Instruccion.indexOf(" "), Instruccion.length()).trim();
+        Contenido[1] = Comandos.substring(0, Comandos.indexOf(" "));
+        Comandos = Comandos.substring(Comandos.indexOf(" "), Comandos.length()).trim();
+        Contenido[2] = Comandos;
+        InstruccionesASM.add("@RETURN"+Contenido[1].toUpperCase());
+        SubirSP();
+        InstruccionesASM.add("@LCL");
+        SubirSP();
+        InstruccionesASM.add("@ARG");
+        SubirSP();
+        InstruccionesASM.add("@THIS");
+        SubirSP();
+        InstruccionesASM.add("@THAT");
+        SubirSP();
+        InstruccionesASM.add("@SP");
+        InstruccionesASM.add("D=M");
+        InstruccionesASM.add("@ARG");
+        InstruccionesASM.add("D=D-"+Contenido[2]);
+        InstruccionesASM.add("M=D-5");
+        InstruccionesASM.add("@LCL");
+        InstruccionesASM.add("M=D");
+        Goto("goto "+Contenido[1]);
+        InstruccionesASM.add("(RETURN"+Contenido[1].toUpperCase()+")");
+    }
+    
+    public void SubirSP()
+    {
         InstruccionesASM.add("D=A");
         InstruccionesASM.add("@SP");
-        InstruccionesASM.add("A=M");
+        InstruccionesASM.add("M=A");
         InstruccionesASM.add("M=D");
         InstruccionesASM.add("@SP");
         InstruccionesASM.add("M=M+1");
-        InstruccionesASM.add("FCOMP" + eqs);
-        
-        eqs++;
     }
     
-        
+    public void Function(String Instruccion)
+    { 
+        String[] Contenido = new String[3];
+        String Comandos="";
+        Contenido[0] = Instruccion.substring(0, Instruccion.indexOf(" "));
+        Comandos = Instruccion.substring(Instruccion.indexOf(" "), Instruccion.length()).trim();
+        Contenido[1] = Comandos.substring(0, Comandos.indexOf(" "));
+        Comandos = Comandos.substring(Comandos.indexOf(" "), Comandos.length()).trim();
+        Contenido[2] = Comandos;
+        InstruccionesASM.add("("+Contenido[1].toUpperCase()+")");
+        for (int i = 0; i < Integer.parseInt(Contenido[2]); i++) {
+            InstruccionesASM.add("@0");
+            SubirSP();
+        }
+    }
     
-} 
-
-public void label(String word){
-    
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public void Return()
+    {
+        InstruccionesASM.add("@LCL");
+        InstruccionesASM.add("D=M");
+        InstruccionesASM.add("@R13");
+        InstruccionesASM.add("M=D");	//R13 is now FRAME
+        InstruccionesASM.add("D=M-5");
+        InstruccionesASM.add("@R14");
+        InstruccionesASM.add("M=D\n");	//R14 stores RET
+        InstruccionesASM.add("@SP\n");
+        InstruccionesASM.add("M=A\n");
+        InstruccionesASM.add("D=M\n");
+        InstruccionesASM.add("@ARG\n");
+        InstruccionesASM.add("A=M\n");
+        InstruccionesASM.add("M=D\n");	// *ARG = pop()
+        InstruccionesASM.add("@ARG\n");
+        InstruccionesASM.add("D=M\n");
+        InstruccionesASM.add("@SP\n");
+        InstruccionesASM.add("M=A\n");
+        InstruccionesASM.add("M=D+1\n");		//SP = ARG + 1
+        InstruccionesASM.add("@R13\n");
+        InstruccionesASM.add("D=M\n");
+        InstruccionesASM.add("@THAT\n");	//THAT = FRAME-1
+        InstruccionesASM.add("M=D-1\n");
+        InstruccionesASM.add("@THIS\n");
+        InstruccionesASM.add("M=D-2\n");	//FRAME - 2
+        InstruccionesASM.add("@ARG\n");
+        InstruccionesASM.add("M=D-3\n");	//FRAME-3
+        InstruccionesASM.add("@LCL\n");
+        InstruccionesASM.add("M=D-4\n");	//FRAME - 4
+        InstruccionesASM.add("@R14\n");
+        InstruccionesASM.add("D=M\n");
+        InstruccionesASM.add("@D\n");	//GOTO RET
+        InstruccionesASM.add("0;JMP\n");
+    }
 }
