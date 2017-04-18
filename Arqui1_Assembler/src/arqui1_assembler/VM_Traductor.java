@@ -8,6 +8,7 @@ package arqui1_assembler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -16,6 +17,7 @@ import java.util.Scanner;
  */
 public class VM_Traductor {
     
+    public List<String> IstruccionesASM = new ArrayList();
         
     public void vm_conv(String path) throws FileNotFoundException{
     
@@ -52,9 +54,11 @@ public class VM_Traductor {
             
             switch (split[0])
             {
-                case "push": 
+                case "push":
+                    PushnPop(item);
                     break;
-                case "pop": 
+                case "pop":
+                    PushnPop(item);
                     break;
                 case "add": 
                     break;        
@@ -88,15 +92,21 @@ public class VM_Traductor {
                     break;
                 default:
                     break;
-            }
-            
-           
-           
-            
-            
+            }  
         }
-        
-        
-        
+    }
+    
+    public void PushnPop(String Instruccion)
+    { 
+        String[] Contenido = new String[3];
+        String Comandos="";
+        Contenido[0] = Instruccion.substring(0, Instruccion.indexOf(" "));
+        Comandos = Instruccion.substring(Instruccion.indexOf(" "), Instruccion.length()).trim();
+        Contenido[1] = Comandos.substring(0, Comandos.indexOf(" "));
+        Comandos = Comandos.substring(Comandos.indexOf(" "), Comandos.length()).trim();
+        Contenido[3] = Comandos;
+        if ( Contenido[1].equals("constant")) {
+            IstruccionesASM.add("@"+Contenido[1]);
+        }
     }
 }
