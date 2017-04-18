@@ -60,23 +60,32 @@ public class VM_Traductor {
                 case "pop":
                     PushnPop(item);
                     break;
-                case "add": 
+                case "add":
+                    arithmetic(item);
                     break;        
-                case "sub": 
+                case "sub":
+                    arithmetic(item);
                     break;
-                case "neg": 
+                case "neg":
+                    arithmetic(item);
                     break;
-                case "eq": 
+                case "eq":
+                    arithmetic(item);
                     break;
-                case "lt": 
+                case "lt":
+                    arithmetic(item);
                     break;        
-                case "gt": 
+                case "gt":
+                    arithmetic(item);
                     break;
-                case "and": 
+                case "and":
+                    arithmetic(item);
                     break;
-                case "or": 
+                case "or":
+                    arithmetic(item);
                     break;
-                case "not": 
+                case "not":
+                    arithmetic(item);
                     break;        
                 case "label": 
                     break;
@@ -181,7 +190,7 @@ public class VM_Traductor {
         }
     }
 
-
+int eqs = 1;
 public void arithmetic(String word){
     
     word = word.trim();
@@ -189,24 +198,97 @@ public void arithmetic(String word){
     if ((word.equals("add"))||(word.equals("sub"))||(word.equals("and"))||(word.equals("or"))) {
        
         if (word.equals("add")) {
-            word = "add";
+            word = "D=D+M";
+            
         }
         else if (word.equals("sub")){
-            word = "sub";
+            word = "D=M-D";
         }
+        else if (word.equals("and")){
+            word = "D=D&M";
+        }
+        else if (word.equals("or")){
+            word = "D=D|M";
+        }
+        
+        InstruccionesASM.add("@SP");
+        InstruccionesASM.add("M=M-1");
+        InstruccionesASM.add("A=M");
+        InstruccionesASM.add("D=M");
+        InstruccionesASM.add("A=A-1");
+        InstruccionesASM.add(word);
+        InstruccionesASM.add("M=D");
+        InstruccionesASM.add("D=A+1");
+        InstruccionesASM.add("@SP");
+        InstruccionesASM.add("M=D");
         
     }
     else if ((word.equals("neg"))||(word.equals("not"))){
         
+        if (word.equals("neg")) {
+            word = "M=-M";
+            
+        }
+        else if (word.equals("not")){
+            word = "M=!M";
+        }
+        InstruccionesASM.add("@SP");
+        InstruccionesASM.add("M=M-1");
+        InstruccionesASM.add("A=M"); 
+        InstruccionesASM.add(word);
+        InstruccionesASM.add("D=A+1");
+        InstruccionesASM.add("@SP");
+        InstruccionesASM.add("M=D");
     }
     else if ((word.equals("eq"))||(word.equals("lt"))||(word.equals("gt"))){
         
+        if (word.equals("eq")) {
+            word = "D=D+M";
+            
+        }
+        else if (word.equals("lt")){
+            word = "D=M-D";
+        }
+        else if (word.equals("gt")){
+            word = "D=D&M";
+        }
+        InstruccionesASM.add("@SP");
+        InstruccionesASM.add("M=M-1");
+        InstruccionesASM.add("A=M");
+        InstruccionesASM.add("D=M");
+        InstruccionesASM.add("A=A-1");
+        InstruccionesASM.add("D=M-D");
+        InstruccionesASM.add("@COMP" + eqs);
+        InstruccionesASM.add(word);
+        InstruccionesASM.add("@0");
+        InstruccionesASM.add("D=-A");
+        InstruccionesASM.add("@SP");
+        InstruccionesASM.add("A=M");
+        InstruccionesASM.add("M=D");
+        InstruccionesASM.add("@SP");
+        InstruccionesASM.add("M=M+1");
+        InstruccionesASM.add("@FCOMP" + eqs);
+        InstruccionesASM.add("0;JMP");
+        InstruccionesASM.add("COMP" + eqs);
+        InstruccionesASM.add("@1");
+        InstruccionesASM.add("D=A");
+        InstruccionesASM.add("@SP");
+        InstruccionesASM.add("A=M");
+        InstruccionesASM.add("M=D");
+        InstruccionesASM.add("@SP");
+        InstruccionesASM.add("M=M+1");
+        InstruccionesASM.add("FCOMP" + eqs);
+        
+        eqs++;
     }
     
         
     
 } 
 
+public void label(String word){
+    
+}
 
 
 
