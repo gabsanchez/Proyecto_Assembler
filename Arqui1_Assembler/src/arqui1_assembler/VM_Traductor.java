@@ -109,4 +109,46 @@ public class VM_Traductor {
             IstruccionesASM.add("@"+Contenido[1]);
         }
     }
+
+
+public void aritmetic(String word){
+    
+    word = word.trim();
+    
+    if ((word.equals("add"))||(word.equals("sub"))||(word.equals("and"))||(word.equals("or"))) {
+       
+        if (word.equals("add")) {
+            word = "add";
+        }
+        else if (word.equals("sub")){
+            word = "sub";
+        }
+        
+    }
+    else if ((word.equals("neg"))||(word.equals("not"))){
+        
+    }
+    else if ((word.equals("eq"))||(word.equals("lt"))||(word.equals("gt"))){
+        
+    }
+    
+        
+    
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
