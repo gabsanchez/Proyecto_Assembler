@@ -293,48 +293,53 @@ public class VM_Traductor {
         if ((word.equals("add"))||(word.equals("sub"))||(word.equals("and"))||(word.equals("or"))) {
 
             if (word.equals("add")) {
-                word = "@SP\n" +
-    "AM=M-1\n" +
-    "D=M\n" +
-    "A=A-1\n" +
-    "M=D+M\n";
-
+                
+                InstruccionesASM.add("SP");
+                InstruccionesASM.add("AM=M-1");
+                InstruccionesASM.add("D=M");
+                InstruccionesASM.add("A=A-1");
+                InstruccionesASM.add("M=D+M");
             }
             else if (word.equals("sub")){
-                word = "@SP\n" +
-    "AM=M-1\n" +
-    "D=M\n" +
-    "A=A-1\n" +
-    "M=M-D\n";
+                
+                InstruccionesASM.add("SP");
+                InstruccionesASM.add("AM=M-1");
+                InstruccionesASM.add("D=M");
+                InstruccionesASM.add("A=A-1");
+                InstruccionesASM.add("M=M-D");
             }
             else if (word.equals("and")){
-                word = "@SP\n" +
-    "AM=M-1\n" +
-    "D=M\n" +
-    "A=A-1\n" +
-    "M=D&M\n";
+               
+                InstruccionesASM.add("SP");
+                InstruccionesASM.add("AM=M-1");
+                InstruccionesASM.add("D=M");
+                InstruccionesASM.add("A=A-1");
+                InstruccionesASM.add("M=D&M");
             }
             else if (word.equals("or")){
-                word = "@SP\n" +
-    "AM=M-1\n" +
-    "D=M\n" +
-    "A=A-1\n" +
-    "M=D|M\n";
+               
+                InstruccionesASM.add("SP");
+                InstruccionesASM.add("AM=M-1");
+                InstruccionesASM.add("D=M");
+                InstruccionesASM.add("A=A-1");
+                InstruccionesASM.add("M=D|M");
+               
             }
 
         }
         else if ((word.equals("neg"))||(word.equals("not"))){
 
             if (word.equals("neg")) {
-                word = "@SP\n" +
-    "A=M-1\n" +
-    "M=-M\n";
-
+               
+                InstruccionesASM.add("SP");
+                InstruccionesASM.add("A=M-1");
+                InstruccionesASM.add("M=-M");
             }
             else if (word.equals("not")){
-                word = "@SP\n" +
-    "A=M-1\n" +
-    "M=!M\n";
+               
+                InstruccionesASM.add("SP");
+                InstruccionesASM.add("A=M-1");
+                InstruccionesASM.add("M=!M");
             }
         
         }
