@@ -7,6 +7,8 @@ package arqui1_assembler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -17,6 +19,14 @@ import java.util.Scanner;
  */
 public class VM_Traductor {
     
+    String path = "";
+    VM_Traductor(String ruta) throws FileNotFoundException, IOException{
+        path = ruta;
+        vm_conv(ruta);
+        String rutaout = path.substring(0, path.length() - 2) + "asm";
+        Escribir(rutaout);
+        
+    }
     public List<String> InstruccionesASM = new ArrayList();
         
     public void vm_conv(String path) throws FileNotFoundException{
@@ -103,6 +113,7 @@ public class VM_Traductor {
                     Function(item);
                     break;
                 case "return": 
+                    Return();
                     break;
                 default:
                     break;
@@ -413,5 +424,15 @@ public class VM_Traductor {
         InstruccionesASM.add("D=M\n");
         InstruccionesASM.add("@D\n");	//GOTO RET
         InstruccionesASM.add("0;JMP\n");
+    }
+    
+    public void Escribir(String nombreCompleto) throws IOException
+    {
+        FileWriter fw = new FileWriter(nombreCompleto);
+        for(String b : InstruccionesASM)
+        {
+            fw.write(b + "\n");
+        }
+        fw.close();
     }
 }
