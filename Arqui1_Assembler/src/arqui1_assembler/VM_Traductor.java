@@ -294,7 +294,7 @@ public class VM_Traductor {
 
             if (word.equals("add")) {
                 
-                InstruccionesASM.add("SP");
+                InstruccionesASM.add("@SP");
                 InstruccionesASM.add("AM=M-1");
                 InstruccionesASM.add("D=M");
                 InstruccionesASM.add("A=A-1");
@@ -302,7 +302,7 @@ public class VM_Traductor {
             }
             else if (word.equals("sub")){
                 
-                InstruccionesASM.add("SP");
+                InstruccionesASM.add("@SP");
                 InstruccionesASM.add("AM=M-1");
                 InstruccionesASM.add("D=M");
                 InstruccionesASM.add("A=A-1");
@@ -310,7 +310,7 @@ public class VM_Traductor {
             }
             else if (word.equals("and")){
                
-                InstruccionesASM.add("SP");
+                InstruccionesASM.add("@SP");
                 InstruccionesASM.add("AM=M-1");
                 InstruccionesASM.add("D=M");
                 InstruccionesASM.add("A=A-1");
@@ -318,7 +318,7 @@ public class VM_Traductor {
             }
             else if (word.equals("or")){
                
-                InstruccionesASM.add("SP");
+                InstruccionesASM.add("@SP");
                 InstruccionesASM.add("AM=M-1");
                 InstruccionesASM.add("D=M");
                 InstruccionesASM.add("A=A-1");
@@ -331,13 +331,13 @@ public class VM_Traductor {
 
             if (word.equals("neg")) {
                
-                InstruccionesASM.add("SP");
+                InstruccionesASM.add("@SP");
                 InstruccionesASM.add("A=M-1");
                 InstruccionesASM.add("M=-M");
             }
             else if (word.equals("not")){
                
-                InstruccionesASM.add("SP");
+                InstruccionesASM.add("@SP");
                 InstruccionesASM.add("A=M-1");
                 InstruccionesASM.add("M=!M");
             }
