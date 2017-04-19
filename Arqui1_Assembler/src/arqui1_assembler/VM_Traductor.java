@@ -173,7 +173,7 @@ public class VM_Traductor {
                         Push();
                     }
                     else { 
-                        InstruccionesASM.add("@THIS");
+                        InstruccionesASM.add("@THAT");
                         InstruccionesASM.add("D=M");
                         Push();
                     }
@@ -209,63 +209,54 @@ public class VM_Traductor {
                     InstruccionesASM.add("D=M");
                     InstruccionesASM.add("@"+Contenido[2]);
                     InstruccionesASM.add("D=D+A");
-                    Push();
+                    Pop();
                     break;
                 case "argument":
                     InstruccionesASM.add("@ARG");
                     InstruccionesASM.add("D=M");
                     InstruccionesASM.add("@"+Contenido[2]);
-                    InstruccionesASM.add("A=D+A");
-                    InstruccionesASM.add("D=M");
-                    Push();
+                    InstruccionesASM.add("D=D+A");
+                    Pop();
                     break;
                 case "this":
                     InstruccionesASM.add("@THIS");
                     InstruccionesASM.add("D=M");
                     InstruccionesASM.add("@"+Contenido[2]);
-                    InstruccionesASM.add("A=D+A");
-                    InstruccionesASM.add("D=M");
-                    Push();
+                    InstruccionesASM.add("D=D+A");
+                    Pop();
                     break;
                 case "that":
                     InstruccionesASM.add("@THAT");
                     InstruccionesASM.add("D=M");
                     InstruccionesASM.add("@"+Contenido[2]);
-                    InstruccionesASM.add("A=D+A");
-                    InstruccionesASM.add("D=M");
-                    Push();
+                    InstruccionesASM.add("D=D+A");
+                    Pop();
                     break;
                 case "pointer":
                 {
                     if (Contenido[2].equals("0")) {
                         InstruccionesASM.add("@THIS");
-                        InstruccionesASM.add("D=M");
-                        Push();
+                        InstruccionesASM.add("D=A");
+                        Pop();
                     }
                     else { 
-                        InstruccionesASM.add("@THIS");
-                        InstruccionesASM.add("D=M");
-                        Push();
+                        InstruccionesASM.add("@THAT");
+                        InstruccionesASM.add("D=A");
+                        Pop();
                     }
                     break;
                 }
-                case "constant":
-                    InstruccionesASM.add("@"+Contenido[2]);
-                    InstruccionesASM.add("D=A");
-                    Push();
-                    break;
                 case "static":
                     InstruccionesASM.add("@var"+Contenido[2]);
-                    InstruccionesASM.add("D=M");
-                    Push();
+                    InstruccionesASM.add("D=A");
+                    Pop();
                     break;
                 case "temp":
                    InstruccionesASM.add("@R5");
                    InstruccionesASM.add("D=A");
                    InstruccionesASM.add("@"+Contenido[2]);
-                   InstruccionesASM.add("A=D+A");
-                   InstruccionesASM.add("D=M");
-                   Push();
+                   InstruccionesASM.add("D=D+A");
+                   Pop();
                    break;
                 default:
                     break;
@@ -347,42 +338,33 @@ public class VM_Traductor {
         else if ((word.equals("eq"))||(word.equals("lt"))||(word.equals("gt"))){
 
             if (word.equals("eq")) {
-                word = "D=D+M";
+                word = "D;JEQ";
 
             }
             else if (word.equals("lt")){
-                word = "D=M-D";
+                word = "D;JLT";
             }
             else if (word.equals("gt")){
-                word = "D=D&M";
+                word = "D;JGT";
             }
             InstruccionesASM.add("@SP");
-            InstruccionesASM.add("M=M-1");
-            InstruccionesASM.add("A=M");
+            InstruccionesASM.add("AM=M-1");
+            //InstruccionesASM.add("A=M");
             InstruccionesASM.add("D=M");
             InstruccionesASM.add("A=A-1");
             InstruccionesASM.add("D=M-D");
             InstruccionesASM.add("@COMP" + eqs);
             InstruccionesASM.add(word);
-            InstruccionesASM.add("@0");
-            InstruccionesASM.add("D=-A");
             InstruccionesASM.add("@SP");
-            InstruccionesASM.add("A=M");
-            InstruccionesASM.add("M=D");
-            InstruccionesASM.add("@SP");
-            InstruccionesASM.add("M=M+1");
+            InstruccionesASM.add("A=M-1");
+            InstruccionesASM.add("M=0");
             InstruccionesASM.add("@FCOMP" + eqs);
             InstruccionesASM.add("0;JMP");
-            InstruccionesASM.add("COMP" + eqs);
-            InstruccionesASM.add("@1");
-            InstruccionesASM.add("D=A");
+            InstruccionesASM.add("(COMP" + eqs + ")");
             InstruccionesASM.add("@SP");
-            InstruccionesASM.add("A=M");
-            InstruccionesASM.add("M=D");
-            InstruccionesASM.add("@SP");
-            InstruccionesASM.add("M=M+1");
-            InstruccionesASM.add("FCOMP" + eqs);
-
+            InstruccionesASM.add("A=M-1");
+            InstruccionesASM.add("M=-1");
+            InstruccionesASM.add("(FCOMP" + eqs + ")");
             eqs++;
         }
 
