@@ -293,47 +293,50 @@ public class VM_Traductor {
         if ((word.equals("add"))||(word.equals("sub"))||(word.equals("and"))||(word.equals("or"))) {
 
             if (word.equals("add")) {
-                word = "D=D+M";
+                word = "@SP\n" +
+    "AM=M-1\n" +
+    "D=M\n" +
+    "A=A-1\n" +
+    "M=D+M\n";
 
             }
             else if (word.equals("sub")){
-                word = "D=M-D";
+                word = "@SP\n" +
+    "AM=M-1\n" +
+    "D=M\n" +
+    "A=A-1\n" +
+    "M=M-D\n";
             }
             else if (word.equals("and")){
-                word = "D=D&M";
+                word = "@SP\n" +
+    "AM=M-1\n" +
+    "D=M\n" +
+    "A=A-1\n" +
+    "M=D&M\n";
             }
             else if (word.equals("or")){
-                word = "D=D|M";
+                word = "@SP\n" +
+    "AM=M-1\n" +
+    "D=M\n" +
+    "A=A-1\n" +
+    "M=D|M\n";
             }
-
-            InstruccionesASM.add("@SP");
-            InstruccionesASM.add("M=M-1");
-            InstruccionesASM.add("A=M");
-            InstruccionesASM.add("D=M");
-            InstruccionesASM.add("A=A-1");
-            InstruccionesASM.add(word);
-            InstruccionesASM.add("M=D");
-            InstruccionesASM.add("D=A+1");
-            InstruccionesASM.add("@SP");
-            InstruccionesASM.add("M=D");
 
         }
         else if ((word.equals("neg"))||(word.equals("not"))){
 
             if (word.equals("neg")) {
-                word = "M=-M";
+                word = "@SP\n" +
+    "A=M-1\n" +
+    "M=-M\n";
 
             }
             else if (word.equals("not")){
-                word = "M=!M";
+                word = "@SP\n" +
+    "A=M-1\n" +
+    "M=!M\n";
             }
-            InstruccionesASM.add("@SP");
-            InstruccionesASM.add("M=M-1");
-            InstruccionesASM.add("A=M"); 
-            InstruccionesASM.add(word);
-            InstruccionesASM.add("D=A+1");
-            InstruccionesASM.add("@SP");
-            InstruccionesASM.add("M=D");
+        
         }
         else if ((word.equals("eq"))||(word.equals("lt"))||(word.equals("gt"))){
 
