@@ -123,6 +123,7 @@ public class VM_Traductor {
     
     public void PushnPop(String Instruccion)
     { 
+        //
         String[] Contenido = new String[3];
         String Comandos="";
         Contenido[0] = Instruccion.substring(0, Instruccion.indexOf(" "));
@@ -134,11 +135,11 @@ public class VM_Traductor {
             switch(Contenido[1])
             {
                 case "local":
-                    InstruccionesASM.add("@LCL");
-                    InstruccionesASM.add("D=M");
-                    InstruccionesASM.add("@"+Contenido[2]);
-                    InstruccionesASM.add("A=D+A");
-                    InstruccionesASM.add("D=M");
+                    InstruccionesASM.add("@LCL");           //Se llama la etiqueta correspondiente al segmento de memoria.
+                    InstruccionesASM.add("D=M");            //Guardamos la posicion del SM.
+                    InstruccionesASM.add("@"+Contenido[2]); //Ingresar el numero.
+                    InstruccionesASM.add("A=D+A");          //Incrementamos la posicion en el valor de SM.
+                    InstruccionesASM.add("D=M");            //Guardamos lo que habia en esa posicion en D.
                     Push();
                     break;
                 case "argument":
@@ -169,33 +170,33 @@ public class VM_Traductor {
                 {
                     if (Contenido[2].equals("0")) {
                         InstruccionesASM.add("@THIS");
-                        InstruccionesASM.add("D=M");
-                        Push();
+                        InstruccionesASM.add("D=M");    //Guarda e valor del puntero de THIS
+                        Push();                         //Y hace push en la pila.
                     }
                     else { 
                         InstruccionesASM.add("@THAT");
-                        InstruccionesASM.add("D=M");
+                        InstruccionesASM.add("D=M");    //Guarda e valor del puntero de THAT.
                         Push();
                     }
                     break;
                 }
                 case "constant":
                     InstruccionesASM.add("@"+Contenido[2]);
-                    InstruccionesASM.add("D=A");
-                    Push();
+                    InstruccionesASM.add("D=A");            //Guardamos el numero en D.
+                    Push();                                 //Se agrega a la pila
                     break;
                 case "static":
-                    InstruccionesASM.add("@var"+Contenido[2]);
-                    InstruccionesASM.add("D=M");
-                    Push();
+                    InstruccionesASM.add("@var"+Contenido[2]);  //Se crea una variable.
+                    InstruccionesASM.add("D=M");                //Se guarda el valor de la variable.
+                    Push();                                     //Se hace push de ese valor.
                     break;
                 case "temp":
-                   InstruccionesASM.add("@R5");
-                   InstruccionesASM.add("D=A");
-                   InstruccionesASM.add("@"+Contenido[2]);
-                   InstruccionesASM.add("A=D+A");
-                   InstruccionesASM.add("D=M");
-                   Push();
+                   InstruccionesASM.add("@R5");                 //Accedemos a la posicion en RAM[5] donde esta el puntero de temp.
+                   InstruccionesASM.add("D=A");                 //Guardamos su valor.
+                   InstruccionesASM.add("@"+Contenido[2]);      //Ingresar el numero.
+                   InstruccionesASM.add("A=D+A");               //Aumentamos la posicion temp al numero que teniamos.
+                   InstruccionesASM.add("D=M");                 //Guardamos ese nuevvo numero en D.
+                   Push();                                      //Hacemos push en D.
                    break;
                 default:
                     break;
@@ -268,21 +269,21 @@ public class VM_Traductor {
     {
         InstruccionesASM.add("@SP");
         InstruccionesASM.add("A=M");
-        InstruccionesASM.add("M=D");
+        InstruccionesASM.add("M=D");        //Guardamos el valor que viene.
         InstruccionesASM.add("@SP");
-        InstruccionesASM.add("M=M+1");
+        InstruccionesASM.add("M=M+1");      //Aumentamos el apuntador.
     }
     
     public void Pop()
     { 
         InstruccionesASM.add("@R13");
-        InstruccionesASM.add("M=D");
+        InstruccionesASM.add("M=D");        //Guardamos el valor que vamos a sacar de la lista en RAM[13].
         InstruccionesASM.add("@SP");
-        InstruccionesASM.add("AM=M-1");
-        InstruccionesASM.add("D=M");
+        InstruccionesASM.add("AM=M-1");     //Disminuimos una posicion SP.
+        InstruccionesASM.add("D=M");        //Guardamos en D la nueva poscion de SP.
         InstruccionesASM.add("@R13");
         InstruccionesASM.add("A=M");
-        InstruccionesASM.add("M=D");
+        InstruccionesASM.add("M=D");        //Sacamos el valor de la pila.
     }
     
     int eqs = 1;
@@ -295,10 +296,10 @@ public class VM_Traductor {
             if (word.equals("add")) {
                 
                 InstruccionesASM.add("@SP");
-                InstruccionesASM.add("AM=M-1");
-                InstruccionesASM.add("D=M");
-                InstruccionesASM.add("A=A-1");
-                InstruccionesASM.add("M=D+M");
+                InstruccionesASM.add("AM=M-1"); //Guardar RAM[SP-1] en A y en M
+                InstruccionesASM.add("D=M");    //Guardamos M en D(Ahora D es RAM[SP])
+                InstruccionesASM.add("A=A-1");  //Bajamos al segundo dato.
+                InstruccionesASM.add("M=D+M");  //Sumamos
             }
             else if (word.equals("sub")){
                 
@@ -332,8 +333,8 @@ public class VM_Traductor {
             if (word.equals("neg")) {
                
                 InstruccionesASM.add("@SP");
-                InstruccionesASM.add("A=M-1");
-                InstruccionesASM.add("M=-M");
+                InstruccionesASM.add("A=M-1");  //Obtenemos la posicion anterior.
+                InstruccionesASM.add("M=-M");   //Apicamos el operador unario.
             }
             else if (word.equals("not")){
                
@@ -355,24 +356,23 @@ public class VM_Traductor {
             else if (word.equals("gt")){
                 word = "D;JGT";
             }
-            InstruccionesASM.add("@SP");
-            InstruccionesASM.add("AM=M-1");
-            //InstruccionesASM.add("A=M");
-            InstruccionesASM.add("D=M");
-            InstruccionesASM.add("A=A-1");
-            InstruccionesASM.add("D=M-D");
-            InstruccionesASM.add("@COMP" + eqs);
-            InstruccionesASM.add(word);
-            InstruccionesASM.add("@SP");
+            InstruccionesASM.add("@SP");                    
+            InstruccionesASM.add("AM=M-1");                 //Guardar RAM[SP-1] en A y en M
+            InstruccionesASM.add("D=M");                    //Guardamos M en D(Ahora D es RAM[SP])
+            InstruccionesASM.add("A=A-1");                  //Bajamos al segundo dato.
+            InstruccionesASM.add("D=M-D");                  //Restamos para ver si es 0 y guardamos en D.
+            InstruccionesASM.add("@COMP" + eqs);            //Llamar etiqueta de comparacion.
+            InstruccionesASM.add(word);                     //Escribir el salto correspondiente.
+            InstruccionesASM.add("@SP");                    
             InstruccionesASM.add("A=M-1");
-            InstruccionesASM.add("M=0");
-            InstruccionesASM.add("@FCOMP" + eqs);
-            InstruccionesASM.add("0;JMP");
-            InstruccionesASM.add("(COMP" + eqs + ")");
+            InstruccionesASM.add("M=0");                    //Si llego aqui es porque no salto en comparacion asi que debe saltar a comparacion fina.
+            InstruccionesASM.add("@FCOMP" + eqs);           //Llamar etiqueta de comparacion final.
+            InstruccionesASM.add("0;JMP");                  //Escribir el salto correspondiente.
+            InstruccionesASM.add("(COMP" + eqs + ")");      //Escribir etiqueta de comparacion.
             InstruccionesASM.add("@SP");
             InstruccionesASM.add("A=M-1");
             InstruccionesASM.add("M=-1");
-            InstruccionesASM.add("(FCOMP" + eqs + ")");
+            InstruccionesASM.add("(FCOMP" + eqs + ")");     //Escribir etiqueta de comparacion fianl.
             eqs++;
         }
 
