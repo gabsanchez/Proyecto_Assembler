@@ -28,6 +28,7 @@ public class VM_Traductor {
         
     }
     public List<String> InstruccionesASM = new ArrayList();
+    int contador=0;
         
     public void vm_conv(String path) throws FileNotFoundException{
     
@@ -59,6 +60,9 @@ public class VM_Traductor {
         //Proceso cada linea 
         for (String item : lines) {
          
+            if (item.contains("/")) {
+                item = item.split("/")[0];
+            }
             String[] split = item.split(" ");
             
             
@@ -286,7 +290,6 @@ public class VM_Traductor {
         InstruccionesASM.add("M=D");        //Sacamos el valor de la pila.
     }
     
-    int eqs = 1;
     public void arithmetic(String word){
 
         word = word.trim();
@@ -361,23 +364,20 @@ public class VM_Traductor {
             InstruccionesASM.add("D=M");                    //Guardamos M en D(Ahora D es RAM[SP])
             InstruccionesASM.add("A=A-1");                  //Bajamos al segundo dato.
             InstruccionesASM.add("D=M-D");                  //Restamos para ver si es 0 y guardamos en D.
-            InstruccionesASM.add("@COMP" + eqs);            //Llamar etiqueta de comparacion.
+            InstruccionesASM.add("@COMP" + contador);            //Llamar etiqueta de comparacion.
             InstruccionesASM.add(word);                     //Escribir el salto correspondiente.
             InstruccionesASM.add("@SP");                    
             InstruccionesASM.add("A=M-1");
             InstruccionesASM.add("M=0");                    //Si llego aqui es porque no salto en comparacion asi que debe saltar a comparacion fina.
-            InstruccionesASM.add("@FCOMP" + eqs);           //Llamar etiqueta de comparacion final.
+            InstruccionesASM.add("@FCOMP" + contador);           //Llamar etiqueta de comparacion final.
             InstruccionesASM.add("0;JMP");                  //Escribir el salto correspondiente.
-            InstruccionesASM.add("(COMP" + eqs + ")");      //Escribir etiqueta de comparacion.
+            InstruccionesASM.add("(COMP" + contador + ")");      //Escribir etiqueta de comparacion.
             InstruccionesASM.add("@SP");
             InstruccionesASM.add("A=M-1");
             InstruccionesASM.add("M=-1");
-            InstruccionesASM.add("(FCOMP" + eqs + ")");     //Escribir etiqueta de comparacion fianl.
-            eqs++;
+            InstruccionesASM.add("(FCOMP" + contador + ")");     //Escribir etiqueta de comparacion fianl.
+            contador++;
         }
-
-
-
     } 
 
     public void Label(String Instruccion){
@@ -403,13 +403,10 @@ public class VM_Traductor {
         Contenido[0] = Instruccion.substring(0, Instruccion.indexOf(" "));
         Contenido[1] = Instruccion.substring(Instruccion.indexOf(" "), Instruccion.length()).trim();
         InstruccionesASM.add("@SP");
-        InstruccionesASM.add("A=M");
+        InstruccionesASM.add("AM=M-1");
         InstruccionesASM.add("D=M");
-        InstruccionesASM.add("@SP");
-        InstruccionesASM.add("M=M-1");
-        InstruccionesASM.add("0;JMP");
         InstruccionesASM.add("@"+Contenido[1].toUpperCase());
-        InstruccionesASM.add("D;JMP");   
+        InstruccionesASM.add("D;JNE");   
     }
 
     public void Call(String Instruccion)
@@ -421,8 +418,18 @@ public class VM_Traductor {
         Contenido[1] = Comandos.substring(0, Comandos.indexOf(" "));
         Comandos = Comandos.substring(Comandos.indexOf(" "), Comandos.length()).trim();
         Contenido[2] = Comandos;
-        InstruccionesASM.add("@RETURN"+Contenido[1].toUpperCase());
-        SubirSP();
+        
+        InstruccionesASM.add("@SP");
+        InstruccionesASM.add("D=M");
+        InstruccionesASM.add("@R13");
+        InstruccionesASM.add("M=D");
+        InstruccionesASM.add("@RET."+contador);
+        InstruccionesASM.add("D=A");	
+        InstruccionesASM.add("@SP");
+        InstruccionesASM.add("A=M");
+        InstruccionesASM.add("M=D");
+        InstruccionesASM.add("@SP");
+        InstruccionesASM.add("M=M+1");
         InstruccionesASM.add("@LCL");
         SubirSP();
         InstruccionesASM.add("@ARG");
@@ -431,22 +438,27 @@ public class VM_Traductor {
         SubirSP();
         InstruccionesASM.add("@THAT");
         SubirSP();
+        InstruccionesASM.add("@R13");
+        InstruccionesASM.add("D=M");
+        InstruccionesASM.add("@"+Contenido[2]);
+        InstruccionesASM.add("D=D-A");
+        InstruccionesASM.add("@ARG");
+        InstruccionesASM.add("M=D");
         InstruccionesASM.add("@SP");
         InstruccionesASM.add("D=M");
-        InstruccionesASM.add("@ARG");
-        InstruccionesASM.add("D=D-"+Contenido[2]);
-        InstruccionesASM.add("M=D-5");
         InstruccionesASM.add("@LCL");
         InstruccionesASM.add("M=D");
-        Goto("goto "+Contenido[1]);
-        InstruccionesASM.add("(RETURN"+Contenido[1].toUpperCase()+")");
+        InstruccionesASM.add("@"+Contenido[1].toUpperCase());
+        InstruccionesASM.add("0;JMP");
+        InstruccionesASM.add("(RET."+contador+")");
+        contador++;
     }
     
     public void SubirSP()
     {
-        InstruccionesASM.add("D=A");
+        InstruccionesASM.add("D=M");
         InstruccionesASM.add("@SP");
-        InstruccionesASM.add("M=A");
+        InstruccionesASM.add("A=M");
         InstruccionesASM.add("M=D");
         InstruccionesASM.add("@SP");
         InstruccionesASM.add("M=M+1");
@@ -461,47 +473,68 @@ public class VM_Traductor {
         Contenido[1] = Comandos.substring(0, Comandos.indexOf(" "));
         Comandos = Comandos.substring(Comandos.indexOf(" "), Comandos.length()).trim();
         Contenido[2] = Comandos;
+        
         InstruccionesASM.add("("+Contenido[1].toUpperCase()+")");
+        InstruccionesASM.add("@SP");
+        InstruccionesASM.add("A=M");
         for (int i = 0; i < Integer.parseInt(Contenido[2]); i++) {
-            InstruccionesASM.add("@0");
-            SubirSP();
+            InstruccionesASM.add("M=0");
+            InstruccionesASM.add("A=A+1");
         }
+        InstruccionesASM.add("D=A");
+        InstruccionesASM.add("@SP");
+        InstruccionesASM.add("M=D");
     }
     
     public void Return()
     {
-        InstruccionesASM.add("@LCL");
-        InstruccionesASM.add("D=M");
-        InstruccionesASM.add("@R13");
-        InstruccionesASM.add("M=D");	
-        InstruccionesASM.add("D=M-5");
-        InstruccionesASM.add("@R14");
-        InstruccionesASM.add("M=D\n");	
-        InstruccionesASM.add("@SP\n");
-        InstruccionesASM.add("M=A\n");
-        InstruccionesASM.add("D=M\n");
-        InstruccionesASM.add("@ARG\n");
-        InstruccionesASM.add("A=M\n");
-        InstruccionesASM.add("M=D\n");	
-        InstruccionesASM.add("@ARG\n");
-        InstruccionesASM.add("D=M\n");
-        InstruccionesASM.add("@SP\n");
-        InstruccionesASM.add("M=A\n");
-        InstruccionesASM.add("M=D+1\n");		
-        InstruccionesASM.add("@R13\n");
-        InstruccionesASM.add("D=M\n");
-        InstruccionesASM.add("@THAT\n");	
-        InstruccionesASM.add("M=D-1\n");
-        InstruccionesASM.add("@THIS\n");
-        InstruccionesASM.add("M=D-2\n");	
-        InstruccionesASM.add("@ARG\n");
-        InstruccionesASM.add("M=D-3\n");	
-        InstruccionesASM.add("@LCL\n");
-        InstruccionesASM.add("M=D-4\n");	
-        InstruccionesASM.add("@R14\n");
-        InstruccionesASM.add("D=M\n");
-        InstruccionesASM.add("@D\n");	
-        InstruccionesASM.add("0;JMP\n");
+        // *(LCL - 5) -> R13
+        InstruccionesASM.add("@LCL\n" +
+        "D=M\n" +
+        "@5\n" +
+        "A=D-A\n" +
+        "D=M\n" +
+        "@R13\n" +
+        "M=D\n" +
+        // *(SP - 1) -> *ARG
+        "@SP\n" +
+        "A=M-1\n" +
+        "D=M\n" +
+        "@ARG\n" +
+        "A=M\n" +
+        "M=D \n" +
+        // ARG + 1 -> SP
+        "D=A+1\n" +
+        "@SP\n" +
+        "M=D\n" +
+        // *(LCL - 1) -> THAT; LCL--
+        "@LCL\n" +
+        "AM=M-1\n" +
+        "D=M\n" +
+        "@THAT\n" +
+        "M=D\n" +
+        // *(LCL - 1) -> THIS; LCL--
+        "@LCL\n" +
+        "AM=M-1\n" +
+        "D=M\n" +
+        "@THIS\n" +
+        "M=D\n" +
+        // *(LCL - 1) -> ARG; LCL--
+        "@LCL\n" +
+        "AM=M-1\n" +
+        "D=M\n" +
+        "@ARG\n" +
+        "M=D\n" +
+        // *(LCL - 1) -> LCL
+        "@LCL\n" +
+        "A=M-1\n" +
+        "D=M\n" +
+        "@LCL\n" +
+        "M=D\n" +
+        // R13 -> A
+        "@R13\n" +
+        "A=M\n" +
+        "0;JMP\n");
     }
     
     public void Escribir(String nombreCompleto) throws IOException
